@@ -6,19 +6,20 @@ A shopping list feature could be added that would add the ingredients of a recip
 
 # Python Setup
 Install `pyenv` to manage python installations; [Linux, macOS, and WSL](https://github.com/pyenv/pyenv/tree/master?tab=readme-ov-file#unixmacos), [windows](https://github.com/pyenv-win/pyenv-win?tab=readme-ov-file#installation).  
-With `pyenv` installed you can now easily install specific python versions.  
+<br>
 Use `pyenv install -l` to list all versions available for your system.  
 I think we should use version `3.11.5` since windows `pyenv` doesn't appear to have `3.11.6`. Install `3.11.5` with:
 ```sh
 pyenv install 3.11.5
 ```
-To use this installation, run `pyenv shell 3.11.5` to activate that version for your current shell session or you can run `python local 3.11.5` from the *root directory of this repo* to set `3.11.5` as the version for this project.  
+To activate this installation, run `pyenv shell 3.11.5`, which activates it for your current shell session or you can run `python local 3.11.5` from the *root directory of this repo* to set `3.11.5` as the version for this project.  
 
-Now that you have Python installed you can setup your virtual environment with `venv`. Inside the repo root, with your python install activated, run the following:
+With Python installed you can setup your virtual environment with `venv`. Inside the repo root, with your python 3.11.5 activated, run the following:
 ```sh
 python3 -m venv .venv
 ```
 This will create a new virtual enviroment inside the `.venv` directory. This is where libraries and packages will be installed so they don't interferre with any system python packages.  
+<br>
 Environments also need to be activated/deactivated:  
 On macOS / Linux run / WSL:
 ```sh
@@ -44,7 +45,7 @@ To install the project dependencies listed in `./requirements.txt`, run:
 pip install -r requirements.txt
 ```
 
-This will install the basic dependcies for our project (`Flask`, `libsql_client`, `python-dotenv`), but only inside of you virtual environment; they will not be accessible without the environment actiavated.  
+This will install the basic dependcies for our project (`Flask`, `libsql_client`, `python-dotenv`), but only inside of your virtual environment; they will not be accessible without the environment actiavated.  
 
 To deactiavte your virtual environment run:
 ```sh

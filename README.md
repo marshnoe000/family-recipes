@@ -34,7 +34,9 @@ On windows CMD (you probably want to use PowerShell on windows, it's just better
 ```
 
 Once you've actiavated the environment you should see a `(.venv)` somewhere in your shell prompt.  
-<pic>  
+Something like this:  
+![pyenv](https://github.com/marshnoe000/family-recipes/assets/37233002/aff29557-1bc4-4d5e-b17a-91c60c69f02f)
+
 You can also verify that you are using the venv python by running `which python` (`get-command python` on Powershell), it should point to the python interpreter in `.venv/bin/`  
 
 To install the project dependencies listed in `./requirements.txt`, run:

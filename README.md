@@ -14,7 +14,7 @@ pyenv install 3.11.5
 ```
 To activate this installation, run `pyenv shell 3.11.5`, which activates it for your current shell session or you can run `python local 3.11.5` from the *root directory of this repo* to set `3.11.5` as the version for this project.  
 
-With Python installed you can setup your virtual environment with `venv`. Inside the repo root, with your python 3.11.5 activated, run the following:
+With Python installed, you can setup your virtual environment with [venv](https://docs.python.org/3/library/venv.html). Inside the repo root, with your python 3.11.5 activated, run the following:
 ```sh
 python3 -m venv .venv
 ```

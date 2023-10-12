@@ -28,7 +28,7 @@ On windows [Powershell](https://github.com/microsoft/PowerShell):
 ```sh
 ./.venv/Scripts/Activate.ps1
 ```
-On windows CMD (you probably want to use PowerShell on windows, it's just better in every way):
+On windows CMD (though you probably want to use PowerShell/WSL on windows, they're just better in every way):
 ```sh
 .\.venv\Scripts\activate.bat
 ```

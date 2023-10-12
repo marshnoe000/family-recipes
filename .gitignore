@@ -1,0 +1,29 @@
+# python
+__pycache__
+dist/
+build/
+
+# pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# flask:
+instance/
+.webassets-cache
+
+# env
+.env
+.venv
+
+
+# PyCharm
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+
+# mac folders
+.DS_Store
+**/.DS_Store
+

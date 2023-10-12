@@ -24,7 +24,7 @@ On macOS / Linux run / WSL:
 ```sh
 source ./.venv/bin/activate
 ```
-On windows [Powershell](https://github.com/microsoft/PowerShell):
+On windows [Powershell](https://github.com/PowerShell/PowerShell):
 ```sh
 ./.venv/Scripts/Activate.ps1
 ```

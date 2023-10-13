@@ -1,7 +1,7 @@
 class RecipeDto:
-    def __init__(self, rid, title, description, ingredients, instructions, difficultyLevel, image, foodType,
+    def __init__(self, recipeId, title, description, ingredients, instructions, difficultyLevel, image, foodType,
                  recipeSource):
-        self.rid = rid
+        self.recipeId = recipeId
         self.title = title
         self.description = description
         self.ingredients = ingredients

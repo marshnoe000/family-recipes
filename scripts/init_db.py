@@ -12,7 +12,7 @@ def main():
 
     if os.path.isfile(db_file):
         yn = input(f"found existing db: '{db_file}', delete and rebuild this db? y/n ")
-        if yn.lower == "n" or yn.lower == "no":
+        if yn.lower() == "n" or yn.lower() == "no":
             print("Pass in a file path to create db at a different location")
             os.exit(0)
 

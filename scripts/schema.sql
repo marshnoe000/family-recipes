@@ -1,39 +1,50 @@
-CREATE TABLE group_table (
-    group_id TEXT PRIMARY KEY,
-    name TEXT NOT NULL,
-    description TEXT,
-    created_date DATE
-);
+DROP TABLE IF EXISTS authtoken;
+DROP TABLE IF EXISTS comment;
+DROP TABLE IF EXISTS authtoken;
+DROP TABLE IF EXISTS post;
+DROP TABLE IF EXISTS recipe;
+DROP TABLE IF EXISTS user_group;
+DROP TABLE IF EXISTS group_table;
+DROP TABLE IF EXISTS user;
 
 CREATE TABLE user (
-    user_id TEXT PRIMARY KEY,
-    username TEXT NOT NULL,
-    password TEXT NOT NULL,
+    username VARCHAR(16) PRIMARY KEY,
+    password_hash TEXT NOT NULL,
+    password_salt TEXT NOT NULL,
     email TEXT,
     name TEXT
 );
-
 CREATE TABLE user_group (
-    user_id TEXT NOT NULL,
-    group_id TEXT NOT NULL,
-    PRIMARY KEY (user_id, group_id),
-    FOREIGN KEY (user_id) REFERENCES user(user_id),
-    FOREIGN KEY (group_id) REFERENCES group_table(group_id)
+    username VARCHAR(16) NOT NULL,
+    group_id INTEGER NOT NULL,
+    PRIMARY KEY (username, group_id),
+    CONSTRAINT fk_username
+        FOREIGN KEY (username) REFERENCES user(username)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (group_id) REFERENCES group_table(id)
 );
-
+CREATE TABLE group_table (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT,
+    created_at DATE
+);
 CREATE TABLE post (
-    post_id TEXT PRIMARY KEY,
-    author_id TEXT NOT NULL,
-    date_created DATE,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    author TEXT NOT NULL,
+    recipe_id INTEGER NOT NULL,
+    created_at DATETIME,
     likes INTEGER,
-    recipe_id TEXT NOT NULL,
     tags TEXT,
-    FOREIGN KEY (author_id) REFERENCES user(user_id),
-    FOREIGN KEY (recipe_id) REFERENCES recipe(recipe_id)
+    CONSTRAINT fk_author
+        FOREIGN KEY (author) REFERENCES user(username)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (recipe_id) REFERENCES recipe(id)
 );
-
 CREATE TABLE recipe (
-    recipe_id TEXT PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT,
     description TEXT,
     ingredients TEXT,
@@ -42,4 +53,27 @@ CREATE TABLE recipe (
     image BLOB,
     food_type TEXT,
     recipe_source TEXT
+);
+CREATE TABLE comment (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    author VARCHAR(16) NOT NULL,
+    content TEXT NOT NULL,
+    post_id INTEGER NOT NULL,
+    parent_id INTEGER,
+    CONSTRAINT fk_author
+        FOREIGN KEY (author) REFERENCES user(username)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES post(id),
+    FOREIGN KEY (parent_id) REFERENCES comment(id)
+);
+CREATE TABLE authtoken (
+    username varchar(16) NOT NULL,
+    token char(24) NOT NULL,
+    expires_at DATETIME NOT NULL,
+    PRIMARY KEY (username, token),
+    CONSTRAINT fk_username
+        FOREIGN KEY (username) REFERENCES user(username)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
 );

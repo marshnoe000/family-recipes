@@ -1,13 +1,14 @@
 import libsql_client as libsql
+import configparser
 
 class BaseRepository:
     def __init__(self, isProd):
+        config = configparser.ConfigParser()
+        config.read("config.ini")
         if isProd:
             self.client = libsql.create_client_sync(
-                url="libsql://recipes-deparr.turso.io",
-                auth_token="eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJpYXQiOiIyMDIzLTEwLTE4VDAyOjI0OjMyLjEzNDM2MjU1MVoiLCJpZC"
-                           "I6ImViMTdhZDMxLTZhZWYtMTFlZS05NzA3LWZhMThmYjJkYTBjNSJ9.QNkryPV--hw48Y4nFICjSVoiBwrPxRb5m_0gpwKw"
-                           "DM-HsSsXzFBN7W8s8q5_uCTr5XPqOSVwi6QF9pqTO8oZCQ"
+                url=config.get('database', 'url'),
+                auth_token=config.get('database', 'auth_token')
             )
         else:
             self.client = libsql.create_client_sync(url="file:scripts/recipes.db")

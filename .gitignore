@@ -28,3 +28,5 @@ instance/
 .DS_Store
 **/.DS_Store
 
+#ignore files
+config.ini

@@ -1,10 +1,12 @@
 from repositories.UserRepository import UserRepository
 
+
 class UserService:
     def __init__(self, isProd):
         self.userRepository = UserRepository(isProd)
 
-    def register(self, username, password, email, name):
+    def register(self, userDto):
         # hash and salt the password here if desired
         salt = "salt"
-        return self.userRepository.registerUser(username, password, salt, email, name)
+        userDto.passwordSalt = salt
+        return self.userRepository.registerUser(userDto)

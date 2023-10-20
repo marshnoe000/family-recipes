@@ -1,8 +1,7 @@
 class UserDto:
-    def __init__(self, userId, username, password, email, name):
-        self.userId = userId
+    def __init__(self, username, password, email, name, passwordSalt=""):
         self.username = username
         self.password = password
+        self.passwordSalt = passwordSalt
         self.email = email
         self.name = name
-

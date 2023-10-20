@@ -1,5 +1,6 @@
-from flask import Blueprint, jsonify, request, make_response
+from flask import Blueprint, jsonify, request
 from services.UserService import UserService
+from dtos.UserDto import UserDto
 
 user_blueprint = Blueprint('user', __name__)
 
@@ -17,11 +18,12 @@ def register():
     password = data.get('password')
     email = data.get('email')
     name = data.get('name')
+    userDto = UserDto(username, password, email, name)
     isProd = True if data.get('isProd') == "True" else False
 
     userService = UserService(isProd)
 
-    successful = userService.register(username, password, email, name)
+    successful = userService.register(userDto)
     status = 201 if successful else 400
     response = jsonify({'status': status})
     return response, status

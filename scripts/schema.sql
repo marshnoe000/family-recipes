@@ -32,16 +32,19 @@ CREATE TABLE group_table (
 );
 CREATE TABLE post (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    author TEXT NOT NULL,
+    author VARCHAR(16) NOT NULL,
     recipe_id INTEGER NOT NULL,
+    group_id INTEGER NOT NULL,
+    content VARCHAR(255),
     created_at DATETIME,
-    likes INTEGER,
+    likes INTEGER DEFAULT 0,
     tags TEXT,
     CONSTRAINT fk_author
         FOREIGN KEY (author) REFERENCES user(username)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    FOREIGN KEY (recipe_id) REFERENCES recipe(id)
+    FOREIGN KEY (recipe_id) REFERENCES recipe(id),
+    FOREIGN KEY (group_id) REFERENCES group_table(id)
 );
 CREATE TABLE recipe (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

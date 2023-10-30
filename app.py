@@ -2,7 +2,7 @@ import os
 import logging
 from dotenv import load_dotenv
 
-from flask import Flask
+from flask import Flask, jsonify
 from controllers.UserController import user_blueprint
 from controllers.PostController import post_blueprint
 from controllers.RecipeController import recipe_blueprint
@@ -43,6 +43,12 @@ app.register_blueprint(user_blueprint)
 app.register_blueprint(post_blueprint)
 app.register_blueprint(recipe_blueprint)
 app.register_blueprint(group_blueprint)
+
+
+@app.route("/health", methods=["GET"])
+def health():
+    return jsonify({"status": 200}), 200
+
 
 if __name__ == '__main__':
     app.run()

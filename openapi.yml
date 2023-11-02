@@ -1,0 +1,328 @@
+openapi: 3.0.3
+info:
+  title: Family Recipes
+  description: |-
+    The purpose of Family Recipes is to make sharing recipes easier. Instead of asking for Grandma’s old chocolate chip cookie recipe that has been kept on the same piece of paper for decades, users can save and share recipes with their families and other groups from Family Recipes. Users are also able to view recipes shared with them from various groups in a format similar to social media. Family Recipes allows users to easily see recipes recommended by people they know and share their favorite recipes with others.
+  version: 1.0.0
+servers:
+  - url: TBD
+tags:
+  - name: group
+    description: Related to groups/families
+  - name: post
+    description: Related to posts on Family Recipes
+  - name: recipe
+    description: Related to recipes
+  - name: user
+    description: Related to users of Family Recipes
+paths:
+  /group:
+    get:
+      tags:
+        - group
+      summary: Get group
+      description: Get group
+      operationId: getGroup
+      responses:
+        '200':
+          description: Successfully got group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/group'
+        '404':
+          description: Not found
+  /post:
+    post:
+      tags:
+        - post
+      summary: Create post
+      description: Create a post
+      operationId: createPost
+      requestBody:
+        $ref: '#/components/requestBodies/createPost'
+      responses:
+        '201':
+          description: Successfully created post
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 201
+        '400':
+          description: Bad request
+  /post/id/{postId}:
+    get:
+      tags:
+        - post
+      summary: Get post
+      description: Get single post
+      operationId: getSinglePost
+      responses:
+        '200':
+          description: Successfully got post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/post'
+        '404':
+          description: Not found
+    delete:
+      tags:
+        - post
+      summary: Delete post
+      description: Delete a post
+      operationId: deleteSinglePost
+      responses:
+        '200':
+          description: Successfully deleted post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deletePost'
+        '404':
+          description: Not found
+  /post/u/{username}:
+    get:
+      tags:
+        - post
+      summary: Get posts by user
+      description: Get posts by user
+      operationId: getUserPosts
+      responses:
+        '200':
+          description: Successfully got posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/post'
+        '404':
+          description: Not found
+  /post/g/{groupId}:
+    get:
+      tags:
+        - post
+      summary: Get posts by group
+      description: Get posts by group
+      operationId: getGroupPosts
+      responses:
+        '200':
+          description: Successfully got posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/post'
+        '404':
+          description: Not found
+  /recipe:
+    get:
+      tags:
+        - recipe
+      summary: Get recipe
+      description: Get a recipe
+      operationId: getRecipe
+      responses:
+        '200':
+          description: Successfully got recipe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/recipe'
+        '404':
+          description: Not found
+  /user:
+    get:
+      tags:
+        - user
+      summary: Get user
+      description: Get a user
+      operationId: getUser
+      responses:
+        '200':
+          description: Successfully got user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '404':
+          description: Not found
+  /user/register:
+    post:
+      tags:
+        - user
+      summary: Register user
+      description: Register a user
+      operationId: registerUser
+      requestBody:
+        $ref: '#/components/requestBodies/register'
+      responses:
+        '201':
+          description: Successfully registered user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 201
+components:
+  schemas:
+    group:
+      type: object
+      properties:
+        groupId:
+          type: integer
+          format: int64
+          example: 1234
+        name:
+          type: string
+          description: Group name
+          example: Cool Group
+        description:
+          type: string
+          description: Group description
+          example: This is a cool group
+        createdDate:
+          type: string
+          format: date-time
+    post:
+      type: object
+      properties:
+        postId:
+          type: integer
+          format: int64
+          example: 1234
+        authorId:
+          type: integer
+          format: int64
+          example: 1234
+        dateCreated:
+          type: string
+          format: date-time
+        likes:
+          type: array
+          items:
+            type: integer
+            format: int64
+            description: userId's of users who liked the post
+        recipeId:
+          type: integer
+          format: int64
+          example: 1234
+        tags:
+          type: array
+          items:
+            type: string
+            description: Tags to associate with the post
+    deletePost:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 200
+        rowsAffected:
+          type: integer
+          example: 1
+    recipe:
+      type: object
+      properties:
+        recipeId:
+          type: integer
+          format: int64
+          example: 1234
+        title:
+          type: string
+          example: Mac and Cheese
+        description:
+          type: string
+          example: Delicious Mac and Cheese
+        ingredients:
+          type: array
+          items:
+            type: string
+            description: Ingredients needed for recipe
+        instructions:
+          type: string
+          example: Make the mac and cheese
+        difficultyLevel:
+          type: string
+          description: Level of difficulty
+          example: Easy
+          enum:
+            - Easy
+            - Medium
+            - Hard
+            - Expert
+        imageId:
+          type: integer
+          format: int64
+          example: 1234
+        foodType:
+          type: string
+          example: Pasta
+        recipeSource:
+          type: string
+    user:
+      type: object
+      properties:
+        username:
+          type: string
+          example: johndoe
+        password:
+          type: string
+          example: password
+        passwordSalt:
+          type: string
+          example: salt
+        email:
+          type: string
+          example: fake@email.com
+        name:
+          type: string
+          example: John Doe
+  requestBodies:
+    register:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                example: johndoe
+              password:
+                type: string
+                example: password
+              email:
+                type: string
+                example: fake@email.com
+              name:
+                type: string
+                example: John Doe
+    createPost:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              authorId:
+                type: integer
+                format: int64
+                example: 1234
+              recipeId:
+                type: integer
+                format: int64
+                example: 1234
+              tags:
+                type: array
+                items:
+                  type: string
+                  description: Tags to associate with the post

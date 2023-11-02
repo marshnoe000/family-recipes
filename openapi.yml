@@ -55,6 +55,14 @@ paths:
         '400':
           description: Bad request
   /post/id/{postId}:
+    parameters:
+      - name: postId
+        in: path
+        description: ID of post to get
+        required: true
+        schema:
+          type: integer
+          format: int64
     get:
       tags:
         - post
@@ -86,6 +94,13 @@ paths:
         '404':
           description: Not found
   /post/u/{username}:
+    parameters:
+      - name: username
+        in: path
+        description: Username of user to get posts from
+        required: true
+        schema:
+          type: string
     get:
       tags:
         - post
@@ -104,6 +119,14 @@ paths:
         '404':
           description: Not found
   /post/g/{groupId}:
+    parameters:
+      - name: groupId
+        in: path
+        description: ID of group to get posts from
+        required: true
+        schema:
+          type: integer
+          format: int64
     get:
       tags:
         - post

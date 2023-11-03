@@ -22,5 +22,5 @@ def client():
         sys.argv = [BASE_DIR.joinpath(INIT_DB), BASE_DIR.joinpath(TEST_DB),
                     "--force"]  # tell init_db where to build the database
         init_db.main()
-        load_dotenv("C:\\Users\\noell\\family-recipes\\test.env")
+        load_dotenv(BASE_DIR.joinpath("test.env"))
         yield app.test_client()  # tests run here

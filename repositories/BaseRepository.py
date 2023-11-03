@@ -1,6 +1,9 @@
 from os import getenv
 
 import libsql_client as libsql
+from flask import current_app as app
+
+from dtos.errors import DatabaseError
 
 
 class BaseRepository:
@@ -9,6 +12,15 @@ class BaseRepository:
             url=getenv("DATABASE_URL"),
             auth_token=getenv("DATABASE_AUTHTOKEN")
         )
+
+    def execute(self, stat: str, args: list[any]) -> any:
+        try:
+            return self.client.execute(stat, args)
+        except libsql.LibsqlError as e:
+            app.logger.error(e)
+            # raise DatabaseError(e.explanation)
+            # TODO explanation field should exist but doesnt, use args instead
+            raise DatabaseError(e.args[0])
 
     def __del__(self):
         if self.client:

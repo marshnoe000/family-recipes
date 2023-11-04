@@ -26,11 +26,11 @@ class PostDto(dict):
             json.get('tags')
         )
 
-    def fromResultSet(rs: ResultSet):
+    def fromResultSet(rs: ResultSet, forceArray=False):
         if len(rs) == 0:
             return None
 
-        if len(rs) == 1:
+        if len(rs) == 1 and not forceArray:
             row = rs[0]
             return PostDto(
                 row[0], row[1],

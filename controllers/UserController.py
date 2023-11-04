@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from services.UserService import UserService
 from dtos.UserDto import UserDto
+from dtos.responses import Response
 
 user_blueprint = Blueprint('user', __name__)
 
@@ -12,7 +13,7 @@ def getUser():
 
 
 @user_blueprint.route('/user/register', methods=['POST'])
-def register():
+def register() -> (Response, int):
     data = request.get_json()
     username = data.get('username')
     password = data.get('password')
@@ -23,7 +24,5 @@ def register():
 
     userService = UserService(isProd)
 
-    successful = userService.register(userDto)
-    status = 201 if successful else 400
-    response = jsonify({'status': status})
-    return response, status
+    userService.register(userDto)
+    return jsonify({"status": 201}), 201

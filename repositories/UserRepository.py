@@ -8,9 +8,8 @@ class UserRepository(BaseRepository):
         super().__init__(isProd)
 
     def registerUser(self, userDto):
-        try:
-            self.client.execute(UserRepository.INSERT_USER_STATEMENT, [userDto.username, userDto.password, userDto.passwordSalt, userDto.email, userDto.name])
-            return True
-        except Exception as e:
-            print(e.add_note("Register user failed to insert into table"))
-            return False
+        self.execute(
+            UserRepository.INSERT_USER_STATEMENT,
+            [userDto.username, userDto.password,
+             userDto.passwordSalt, userDto.email,
+             userDto.name])

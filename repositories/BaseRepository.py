@@ -1,7 +1,6 @@
 from os import getenv
 
 import libsql_client as libsql
-from flask import current_app as app
 
 from dtos.errors import DatabaseError
 
@@ -17,7 +16,6 @@ class BaseRepository:
         try:
             return self.client.execute(stat, args)
         except libsql.LibsqlError as e:
-            app.logger.error(e)
             # raise DatabaseError(e.explanation)
             # TODO explanation field should exist but doesnt, use args instead
             raise DatabaseError(e.args[0])

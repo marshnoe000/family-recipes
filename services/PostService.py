@@ -6,15 +6,19 @@ from dtos.responses import DataResponse
 from dtos.errors import BadRequestError
 
 
-def validateCreatePost(post: PostDto):
+def validateNewPost(post: PostDto):
+    badVal = None
     if post["author"] is None or len(post["author"]) == 0:
-        raise BadRequestError("Expected post author")
+        badVal = "author"
 
     if post["recipeId"] is None:
-        raise BadRequestError("Expected post recipeId")
+        badVal = "recipeId"
 
     if post["groupId"] is None:
-        raise BadRequestError("Expected post groupId")
+        badVal = "groupId"
+
+    if badVal is not None:
+        raise BadRequestError(f"Need post.{badVal} to create post")
 
 
 class PostService:
@@ -22,8 +26,8 @@ class PostService:
         self.postRepo = PostRepository(isProd)
 
     def makePost(self, post: PostDto) -> DataResponse:
-        app.logger.info(f"got post: {post}")
-        validateCreatePost(post)
+        validateNewPost(post)
+        app.logger.info(f"creating {post}...")
         insertedId = self.postRepo.insertPost(post)
         res = DataResponse(201, {"id": insertedId})
 

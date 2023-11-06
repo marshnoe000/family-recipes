@@ -2,7 +2,7 @@ from flask import current_app as app
 
 from repositories import PostRepository
 from dtos import PostDto
-from dtos.responses import DataResponse
+from dtos.responses import DataResponse, DeleteResponse
 from dtos.errors import BadRequestError
 
 
@@ -29,29 +29,30 @@ class PostService:
         validateNewPost(post)
         app.logger.info(f"creating {post}...")
         insertedId = self.postRepo.insertPost(post)
-        res = DataResponse(201, {"id": insertedId})
+        res = CreateResponse(201, insertedId)
 
         return res
 
     def getPost(self, id: int) -> DataResponse:
         post = self.postRepo.getPostById(id)
-        res = DataResponse(200, {"post": post})
+        res = DataResponse(200, post)
+
         return res
 
     def getUserPosts(self, username: str) -> DataResponse:
         posts = self.postRepo.getPostsByUser(username)
-        res = DataResponse(200, {"posts": posts})
+        res = DataResponse(200, posts)
 
         return res
 
     def getGroupPosts(self, groupId: int) -> DataResponse:
         posts = self.postRepo.getPostsByGroup(groupId)
-        res = DataResponse(200, {"posts": posts})
+        res = DataResponse(200, posts)
 
         return res
 
-    def deletePost(self, id: int) -> DataResponse:
+    def deletePost(self, id: int) -> DeleteResponse:
         rowsAffected = self.postRepo.deletePostById(id)
-        res = DataResponse(200, {"rowsAffected": rowsAffected})
+        res = DeleteResponse(200, rowsAffected)
 
         return res

@@ -1,4 +1,5 @@
 from libsql_client import ResultSet
+from .errors import BadRequestError
 
 
 class PostDto(dict):
@@ -15,6 +16,9 @@ class PostDto(dict):
         )
 
     def fromJson(json: dict):
+        if json.get('tags') and type(json.get('tags')) != list:
+            raise BadRequestError("Expected array for post.tags")
+
         return PostDto(
             json.get('id'),
             json.get('author'),
@@ -23,7 +27,7 @@ class PostDto(dict):
             json.get('content'),
             json.get('dateCreated'),
             json.get('likes'),
-            json.get('tags')
+            ",".join(json.get('tags'))
         )
 
     def fromResultSet(rs: ResultSet, forceArray=False):
@@ -36,11 +40,11 @@ class PostDto(dict):
                 row[0], row[1],
                 row[2], row[3],
                 row[4], row[5],
-                row[6], row[7]
+                row[6], row[7].split(',')
             )
 
         posts = [PostDto(row[0], row[1], row[2], row[3],
-                         row[4], row[5], row[6], row[7])
+                         row[4], row[5], row[6], row[7].split(','))
                  for row in rs]
         return posts
 

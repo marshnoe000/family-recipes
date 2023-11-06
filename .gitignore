@@ -12,7 +12,7 @@ instance/
 .webassets-cache
 
 # env
-.env
+*.env
 .venv
 *.db
 

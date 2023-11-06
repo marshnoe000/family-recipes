@@ -1,8 +1,13 @@
 from libsql_client import ResultSet
+from .errors import BadRequestError
 
 
 class PostDto(dict):
     def __init__(self, id, author, recipeId, groupId, content, dateCreated, likes, tags):
+
+        if bool(tags) and type(tags) is not list:
+            raise BadRequestError("Expected array for post.tags")
+
         super().__init__(
             id=id,
             author=author,
@@ -36,11 +41,11 @@ class PostDto(dict):
                 row[0], row[1],
                 row[2], row[3],
                 row[4], row[5],
-                row[6], row[7]
+                row[6], row[7].split(',')
             )
 
         posts = [PostDto(row[0], row[1], row[2], row[3],
-                         row[4], row[5], row[6], row[7])
+                         row[4], row[5], row[6], row[7].split(','))
                  for row in rs]
         return posts
 

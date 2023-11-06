@@ -15,6 +15,10 @@ class PostRepository(BaseRepository):
         super().__init__(isProd)
 
     def insertPost(self, post: PostDto) -> int:
+
+        if type(post["tags"]) is list:
+            post["tags"] = ",".join(post["tags"])
+
         rs: ResultSet = self.execute(
             PostRepository.INSERT_POST,
             [post["author"], post["recipeId"],

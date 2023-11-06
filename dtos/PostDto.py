@@ -4,6 +4,10 @@ from .errors import BadRequestError
 
 class PostDto(dict):
     def __init__(self, id, author, recipeId, groupId, content, dateCreated, likes, tags):
+
+        if bool(tags) and type(tags) is not list:
+            raise BadRequestError("Expected array for post.tags")
+
         super().__init__(
             id=id,
             author=author,
@@ -16,9 +20,6 @@ class PostDto(dict):
         )
 
     def fromJson(json: dict):
-        if json.get('tags') and type(json.get('tags')) != list:
-            raise BadRequestError("Expected array for post.tags")
-
         return PostDto(
             json.get('id'),
             json.get('author'),
@@ -27,7 +28,7 @@ class PostDto(dict):
             json.get('content'),
             json.get('dateCreated'),
             json.get('likes'),
-            ",".join(json.get('tags'))
+            json.get('tags')
         )
 
     def fromResultSet(rs: ResultSet, forceArray=False):

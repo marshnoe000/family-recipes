@@ -2,7 +2,7 @@ from flask import current_app as app
 
 from repositories import PostRepository
 from dtos import PostDto
-from dtos.responses import DataResponse, DeleteResponse
+from dtos.responses import DataResponse, DeleteResponse, CreateResponse
 from dtos.errors import BadRequestError
 
 
@@ -25,7 +25,7 @@ class PostService:
     def __init__(self, isProd=False):
         self.postRepo = PostRepository(isProd)
 
-    def makePost(self, post: PostDto) -> DataResponse:
+    def makePost(self, post: PostDto) -> CreateResponse:
         validateNewPost(post)
         app.logger.info(f"creating {post}...")
         insertedId = self.postRepo.insertPost(post)

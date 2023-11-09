@@ -16,7 +16,7 @@ app.logger.setLevel(logging.INFO)
 if load_dotenv(os.getenv("ENV_PATH")):
     app.logger.info(f"Loaded env from path: {os.getenv('ENV_PATH')}")
 else:
-    app.logger.warn(f"Unable to load env from path: {os.getenv('ENV_PATH')}")
+    app.logger.warning(f"Unable to load env from path: {os.getenv('ENV_PATH')}")
 
 
 loglevel = logging.INFO
@@ -29,7 +29,7 @@ if os.getenv("LOG_LEVEL"):
         case "warn":
             loglevel = logging.WARN
         case "error":
-            loglevel = logging.ERRO
+            loglevel = logging.ERROR
         case "critical":
             loglevel = logging.CRITICAL
         case _:

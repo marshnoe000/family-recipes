@@ -27,6 +27,3 @@ instance/
 # mac folders
 .DS_Store
 **/.DS_Store
-
-#ignore files
-config.ini

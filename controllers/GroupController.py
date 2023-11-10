@@ -25,8 +25,5 @@ def addUserToGroup() -> (Response, int):
     groupId: int = data.get('groupId')
     username: str = data.get('username')
     gs: GroupService = GroupService(False)
-    try:
-        res: dict = gs.addUserToGroup(groupId, username)
-    except Exception as e:
-        res: dict = ErrorResponse(e)
+    res: dict = gs.addUserToGroup(groupId, username)
     return jsonify(res), res["status"]

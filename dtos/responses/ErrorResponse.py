@@ -15,3 +15,6 @@ class ErrorResponse(dict):
             error=error,
             message=err.__str__()
         )
+
+    def __getattr__(self, attr: str):
+        return self[attr]

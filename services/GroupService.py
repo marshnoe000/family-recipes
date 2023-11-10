@@ -2,7 +2,7 @@ from flask import current_app as app
 
 from repositories import GroupRepository
 from dtos import GroupDto
-from dtos.responses import DataResponse
+from dtos.responses import DataResponse, CreateResponse, DeleteResponse
 from dtos.errors import BadRequestError
 
 
@@ -11,25 +11,27 @@ class GroupService:
         self.groupRepo = GroupRepository(isProd)
         pass
 
-    def makeGroup(self, group: GroupDto) -> DataResponse:
+    # TODO fix this
+    def makeGroup(self, group: GroupDto) -> CreateResponse:
         if group["name"] is None or len(group["name"]) == 0:
             raise BadRequestError("Expected group name")
 
-        app.logger.info(f"making group: {group}")
+        app.logger.debug(f"making group: {group}")
         insertedId = self.groupRepo.insertGroup(group)
-        res = DataResponse(201, {"id": insertedId})
+        res = CreateResponse(201, insertedId)
 
         return res
 
-    def addUserToGroup(self, groupId: int, username: str):
-        if groupId < 0 or groupId is None:
-            raise BadRequestError(f"Expected positive integer for group.groupId, got '{groupId}'")
-
-        if len(username) < 1 or username is None:
-            raise BadRequestError(f"Expected username, got '{username}'")
-
-        app.logger.info(f"adding {username} to group {groupId}")
+    def addUserToGroup(self, groupId: int, username: str) -> CreateResponse:
+        app.logger.debug(f"adding {username} to group {groupId}")
         self.groupRepo.addUserToGroup(groupId, username)
         res = DataResponse(201, None)
+
+        return res
+
+    def removeUserFromGroup(self, groupId: int, username: str) -> DeleteResponse:
+        app.logger.debug(f"removing {username} from group {groupId}")
+        rowsAffected = self.groupRepo.removeUserFromGroup(groupId, username)
+        res = DeleteResponse(200, rowsAffected)
 
         return res

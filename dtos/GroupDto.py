@@ -1,3 +1,6 @@
+from libsql_client import ResultSet
+
+
 class GroupDto(dict):
     def __init__(self, groupId, name, description, dateCreated):
         super().__init__(
@@ -14,6 +17,9 @@ class GroupDto(dict):
             json.get('description'),
             json.get('dateCreated'),
         )
+
+    def fromResultSet(rs: ResultSet):
+        pass
 
     def __str__(self):
         return f"group{super().__str__()}"

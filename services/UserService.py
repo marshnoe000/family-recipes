@@ -9,16 +9,16 @@ from dtos.responses import DataResponse, DeleteResponse, CreateResponse
 
 def validateNewUser(user: UserDto):
     badVal = None
-    if user["username"] is None or len(user["username"]) == 0:
+    if user.username is None or len(user.username) == 0:
         badVal = "username"
 
-    if user["password"] is None:
+    if user.password is None:
         badVal = "password"
 
-    if user["email"] is None:
+    if user.email is None:
         badVal = "email"
 
-    if user["name"] is None:
+    if user.name is None:
         badVal = "name"
 
     if badVal is not None:

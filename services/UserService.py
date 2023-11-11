@@ -48,7 +48,7 @@ class UserService:
         validateNewUser(user)
         app.logger.info(f"creating {user}...")
         salt = "salt"
-        user["passwordSalt"] = salt
+        user.passwordSalt = salt
         self.userRepository.registerUser(user)
         res = CreateResponse(201, user["username"])
 

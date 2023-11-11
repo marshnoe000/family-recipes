@@ -192,16 +192,31 @@ paths:
         '404':
           description: Not found
 
-  /user:
+  /user/{username}:
     get:
       tags:
         - user
-      summary: Get user
-      description: Get a user
+      summary: Get user by username
+      description: Get a user by username
       operationId: getUser
       responses:
         '200':
           description: Successfully got user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '404':
+          description: Not found
+    delete:
+      tags:
+        - user
+      summary: Delete user by username
+      description: Delete a user by username
+      operationId: deleteUser
+      responses:
+        '204':
+          description: Successfully deleted user
           content:
             application/json:
               schema:
@@ -229,6 +244,26 @@ paths:
                   status:
                     type: integer
                     example: 201
+        '500':
+          description: Not unique username
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 500
+        '400':
+          description: Bad request - incomplete user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 400
 components:
 
   schemas:

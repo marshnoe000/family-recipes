@@ -11,8 +11,8 @@ class PostRepository(BaseRepository):
     SELECT_ALL_BY_GROUP = "select * from post where post.group_id = ?"
     DELETE_BY_ID = "delete from post where post.id = ?"
 
-    def __init__(self, isProd: bool):
-        super().__init__(isProd)
+    def __init__(self):
+        super().__init__()
 
     def insertPost(self, post: PostDto) -> int:
 

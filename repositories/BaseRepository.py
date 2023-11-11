@@ -6,7 +6,7 @@ from dtos.errors import DatabaseError
 
 
 class BaseRepository:
-    def __init__(self, isProd: bool):
+    def __init__(self):
         self.client = libsql.create_client_sync(
             url=getenv("DATABASE_URL"),
             auth_token=getenv("DATABASE_AUTHTOKEN")

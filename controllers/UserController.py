@@ -1,3 +1,5 @@
+import string
+
 from flask import Blueprint, jsonify, request
 from services.UserService import UserService
 from dtos.UserDto import UserDto
@@ -6,10 +8,18 @@ from dtos.responses import Response
 user_blueprint = Blueprint('user', __name__)
 
 
-@user_blueprint.route('/user', methods=['GET'])
-def getUser():
-    data = {'message': 'This is the response from the user endpoint'}
-    return jsonify(data)
+@user_blueprint.route('/user/<string:username>', methods=['GET'])
+def getUser(username: string) -> (Response, int):
+    us: UserService = UserService()
+    res: dict = us.getUser(username)
+    return jsonify(res), res["status"]
+
+
+@user_blueprint.route('/user/<string:username>', methods=['DELETE'])
+def deleteUser(username: string) -> (Response, int):
+    us: UserService = UserService()
+    res: dict = us.deleteUser(username)
+    return jsonify(res), res["status"]
 
 
 @user_blueprint.route('/user/register', methods=['POST'])
@@ -20,9 +30,8 @@ def register() -> (Response, int):
     email = data.get('email')
     name = data.get('name')
     userDto = UserDto(username, password, email, name)
-    isProd = True if data.get('isProd') == "True" else False
 
-    userService = UserService(isProd)
+    userService = UserService()
 
     userService.register(userDto)
-    return jsonify({"status": 201}), 201
+    return jsonify({"username": username}), 201

@@ -18,9 +18,9 @@ class UserRepository(BaseRepository):
     def registerUser(self, user: UserDto):
         self.execute(
             UserRepository.INSERT_USER_STATEMENT,
-            [user["username"], user["password"],
-             user["passwordSalt"], user["email"],
-             user["name"]])
+            [user.username, user.password,
+             user.passwordSalt, user.email,
+             user.name])
 
     def getUserByUsername(self, username):
         rs: ResultSet = self.execute(

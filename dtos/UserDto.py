@@ -39,3 +39,9 @@ class UserDto(dict):
 
     def __str__(self):
         return f"user{super().__str__()}"
+ 
+    def __getattr__(self, attr: str):
+        return self[attr]
+
+    def __setattr__(self, attr: str, value: any):
+        self[attr] = value

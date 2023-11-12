@@ -4,3 +4,4 @@ class GroupsDto:
         self.name = name
         self.description = description
         self.createdDate = createdDate
+

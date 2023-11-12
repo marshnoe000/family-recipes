@@ -25,7 +25,7 @@ class PostService:
     def __init__(self):
         self.postRepo = PostRepository()
 
-    def createPost(self, post: PostDto) -> CreateResponse:
+    def makePost(self, post: PostDto) -> CreateResponse:
         validateNewPost(post)
         app.logger.info(f"creating {post}...")
         insertedId = self.postRepo.insertPost(post)

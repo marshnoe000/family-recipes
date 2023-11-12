@@ -40,5 +40,5 @@ def createPost() -> (Response, int):
     data: dict = request.get_json()
     post: PostDto = PostDto.fromJson(data)
     ps: PostService = PostService()
-    res: dict = ps.createPost(post)
+    res: dict = ps.makePost(post)
     return jsonify(res), res.status

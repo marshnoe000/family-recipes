@@ -18,11 +18,22 @@ class GroupDto(dict):
             json.get('dateCreated'),
         )
 
-    def fromResultSet(rs: ResultSet):
-        pass
+    def fromResultSet(rs: ResultSet, forceArray=False):
+        if len(rs) == 0:
+            return None
+
+        if len(rs) == 1 and not forceArray:
+            row = rs[0]
+            return GroupDto(row[0], row[1], row[2], row[3])
+
+        groups = [GroupDto(row[0], row[1], row[2], row[3]) for row in rs]
+        return groups
 
     def __str__(self):
         return f"group{super().__str__()}"
 
     def __getattr__(self, attr: str):
         return self[attr]
+
+    def __setattr__(self, attr: str, value: any):
+        self[attr] = value

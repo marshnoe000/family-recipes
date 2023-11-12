@@ -179,18 +179,73 @@ paths:
     get:
       tags:
         - recipe
-      summary: Get recipe
-      description: Get a recipe
-      operationId: getRecipe
+      summary: Get all recipes
+      description: Get all recipes
+      operationId: getAllRecipes
+      responses:
+        '200':
+          description: Successfully got recipes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/multiRecipeRes'
+        '404':
+          description: Not found
+    post:
+      tags:
+        - recipe
+      summary: Post a recipe
+      description: post a recipe
+      operationId: postRecipe
+      requestBody:
+        $ref: "#/components/requestBodies/createRecipe"
+      responses:
+        '200':
+          description: Successfully posted recipe
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/postRecipeRes"
+
+
+  /recipe/{recipeId}:
+    parameters:
+      - name: recipeId
+        in: path
+        description: ID of the recipe
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      tags:
+        - recipe
+      summary: Get one recipe by ID
+      description: Get one recipe by ID
+      operationId: GetRecipeByID
       responses:
         '200':
           description: Successfully got recipe
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/recipe'
-        '404':
-          description: Not found
+                $ref: "#/components/schemas/singleRecipeRes"
+
+    delete:
+      tags:
+        - recipe
+      summary: Delete recipe
+      description: Delete recipe
+      operationId: deleteRecipe
+      responses:
+        '200':
+          description: Successfully deleted recipe
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/deleteRecipeRes"
+
+
 
   /user/{username}:
     get:
@@ -345,10 +400,9 @@ components:
             - Medium
             - Hard
             - Expert
-        imageId:
-          type: integer
-          format: int64
-          example: 1234
+        image:
+          type: string
+          example: Base64EncodedString
         foodType:
           type: string
           example: Pasta
@@ -537,6 +591,8 @@ components:
         status:
           type: integer
           example: 200
+        data:
+          $ref: "#/components/schemas/recipe"
 
     multiRecipeRes:
       type: object
@@ -544,8 +600,70 @@ components:
         status:
           type: integer
           example: 200
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/recipe"
+
+    deleteRecipeRes:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 200
+        rowsAffected:
+          type: integer
+          example: 1
+
+    postRecipeRes:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 200
+        id:
+          type: integer
+          example: 1234
 
   requestBodies:
+
+    createRecipe:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+                example: Mac and Cheese
+              description:
+                type: string
+                example: Delicious Mac and Cheese
+              ingredients:
+                type: array
+                items:
+                  type: string
+                  description: Ingredients needed for recipe
+              instructions:
+                type: string
+                example: Make the mac and cheese
+              difficultyLevel:
+                type: string
+                description: Level of difficulty
+                example: Easy
+                enum:
+                  - Easy
+                  - Medium
+                  - Hard
+                  - Expert
+              image:
+                type: string
+                example: Base64EncodedString
+              foodType:
+                type: string
+                example: Pasta
+              recipeSource:
+                type: string
 
     register:
       content:
@@ -599,4 +717,3 @@ components:
               username:
                 type: string
                 example: user12
-

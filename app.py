@@ -3,6 +3,7 @@ import logging
 from dotenv import load_dotenv
 
 from flask import Flask, jsonify
+from flask_cors import CORS
 from controllers.UserController import user_blueprint
 from controllers.PostController import post_blueprint
 from controllers.RecipeController import recipe_blueprint
@@ -11,6 +12,8 @@ from controllers.ErrorController import error_blueprint
 
 
 app = Flask(__name__)
+# allow cors on all endpoints for all domains
+CORS(app)
 app.logger.setLevel(logging.INFO)
 
 if load_dotenv(os.getenv("ENV_PATH")):

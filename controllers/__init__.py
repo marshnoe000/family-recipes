@@ -12,10 +12,6 @@ def boolFromQuery(q: str) -> bool:
         return False
 
     if q.isdigit():
-        if q == "1":
-            return True
-        return False
+        return q == "1"
 
-    if q.lower() == "true":
-        return True
-    return False
+    return q.lower() == "true"

@@ -7,6 +7,8 @@ class ErrorResponse(dict):
                 status = 500
             case "BadRequestError":
                 status = 400
+            case "NotFoundError":
+                status = 404
             case _:
                 status = 500
 
@@ -15,3 +17,9 @@ class ErrorResponse(dict):
             error=error,
             message=err.__str__()
         )
+
+    def __getattr__(self, attr: str):
+        return self[attr]
+
+    def __setattr__(self, attr: str, value: any):
+        self[attr] = value

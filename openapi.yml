@@ -21,7 +21,7 @@ tags:
 
 paths:
 
-  /group/id/{groupId}:
+  /group/{groupId}:
     parameters:
       - name: groupId
         in: path
@@ -30,6 +30,12 @@ paths:
         schema:
           type: integer
           format: int64
+      - name: members
+        in: query
+        description: Whether group members should be included in response
+        required: false
+        schema:
+          type: boolean
     get:
       tags:
         - group
@@ -46,7 +52,38 @@ paths:
         '404':
           description: Not found
 
-  /group/add:
+  /group/{groupId}/users:
+    parameters:
+      - name: groupId
+        in: path
+        description: ID of group to get
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      tags:
+        - group
+      summary: Get group members
+      description: Get list of group members by groupId
+      operationId: getGroupMembers
+      responses:
+        '200':
+          description: Successfully got group members
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: string
+                    description: Usernames of group members
+                  status:
+                    type: integer
+                    format: int64
+
     post:
       tags:
         - group
@@ -61,11 +98,28 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: integer
-                    example: 201
+                $ref: '#/components/schemas/createRes'
+    delete:
+      parameters:
+        - name: username
+          in: query
+          schema:
+            type: string
+          description: Username of user to remove from group, required
+          required: true
+      tags:
+        - group
+      summary: Remove a user from group
+      description: Remove a user from the group
+      operationId: removeFromGroup
+      responses:
+        '200':
+          description: Successfully removed user from group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/deleteRes'
+
 
   /post:
     post:
@@ -542,6 +596,11 @@ components:
             createdDate:
               type: string
               format: date-time
+            members:
+              type: array
+              items:
+                type: string
+                description: usernames of group members
 
 
     multiGroupRes:
@@ -570,6 +629,11 @@ components:
               createdDate:
                 type: string
                 format: date-time
+              members:
+                type: array
+                items:
+                  type: string
+                  description: usernames of group members
 
     singleUserRes:
       type: object
@@ -710,10 +774,6 @@ components:
           schema:
             type: object
             properties:
-              groupId:
-                type: integer
-                format: int64
-                example: 1234
               username:
                 type: string
                 example: user12

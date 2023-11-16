@@ -8,13 +8,13 @@ from dtos.errors import BadRequestError
 
 def validateNewPost(post: PostDto):
     badVal = None
-    if post["author"] is None or len(post["author"]) == 0:
+    if post.author is None or len(post.author) == 0:
         badVal = "author"
 
-    if post["recipeId"] is None:
+    if post.recipeId is None:
         badVal = "recipeId"
 
-    if post["groupId"] is None:
+    if post.groupId is None:
         badVal = "groupId"
 
     if badVal is not None:
@@ -22,8 +22,8 @@ def validateNewPost(post: PostDto):
 
 
 class PostService:
-    def __init__(self, isProd=False):
-        self.postRepo = PostRepository(isProd)
+    def __init__(self):
+        self.postRepo = PostRepository()
 
     def makePost(self, post: PostDto) -> CreateResponse:
         validateNewPost(post)

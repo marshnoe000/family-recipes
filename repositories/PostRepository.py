@@ -16,18 +16,18 @@ class PostRepository(BaseRepository):
 
     def insertPost(self, post: PostDto) -> int:
 
-        if type(post["tags"]) is list:
-            post["tags"] = ",".join(post["tags"])
+        if type(post.tags) is list:
+            post.tags = ",".join(post.tags)
 
         rs: ResultSet = self.execute(
             PostRepository.INSERT_POST,
-            [post["author"], post["recipeId"],
-             post["groupId"], post["content"],
-             post["tags"]])
+            [post.author, post.recipeId,
+             post.groupId, post.content,
+             post.tags])
 
         return rs.last_insert_rowid
 
-    def getPostById(self, id: int) -> PostDto:
+    def getPostById(self, id: int, embedRecipe: bool) -> PostDto:
         rs: ResultSet = self.execute(
             PostRepository.SELECT_ALL_BY_ID,
             [id])
@@ -35,7 +35,7 @@ class PostRepository(BaseRepository):
         post = PostDto.fromResultSet(rs)
         return post
 
-    def getPostsByUser(self, username: str) -> list[PostDto]:
+    def getPostsByUser(self, username: str, embedRecipe: bool) -> list[PostDto]:
         rs: ResultSet = self.execute(
             PostRepository.SELECT_ALL_BY_USER,
             [username])
@@ -43,7 +43,7 @@ class PostRepository(BaseRepository):
         posts = PostDto.fromResultSet(rs, forceArray=True)
         return posts
 
-    def getPostsByGroup(self, groupId: int) -> list[PostDto]:
+    def getPostsByGroup(self, groupId: int, embedRecipe) -> list[PostDto]:
         rs: ResultSet = self.execute(
             PostRepository.SELECT_ALL_BY_GROUP,
             [groupId])

@@ -373,6 +373,37 @@ paths:
                   status:
                     type: integer
                     example: 400
+
+  /user/login:
+    post:
+      tags:
+        - user
+      summary: Login user
+      description: Responds with whether username and password match what is on file
+      operationId: registerUser
+      requestBody:
+        $ref: '#/components/requestBodies/login'
+      responses:
+        '200':
+          description: Successfully logged user in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 200
+        '401':
+          description: Unauthorized - Passwords did not match
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: integer
+                    example: 401
 components:
 
   schemas:
@@ -747,6 +778,18 @@ components:
               name:
                 type: string
                 example: John Doe
+    login:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                example: johndoe
+              password:
+                type: string
+                example: password
 
     createPost:
       content:

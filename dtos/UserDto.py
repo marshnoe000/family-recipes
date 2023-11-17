@@ -15,9 +15,9 @@ class UserDto(dict):
         return UserDto(
             json.get('username'),
             json.get('password'),
-            json.get('passwordSalt'),
             json.get('email'),
-            json.get('name')
+            json.get('name'),
+            json.get('passwordSalt')
         )
 
     def fromResultSet(rs: ResultSet, forceArray=False):
@@ -39,7 +39,7 @@ class UserDto(dict):
 
     def __str__(self):
         return f"user{super().__str__()}"
- 
+
     def __getattr__(self, attr: str):
         return self[attr]
 

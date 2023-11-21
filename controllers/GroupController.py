@@ -11,7 +11,7 @@ group_blueprint = Blueprint('group', __name__)
 @group_blueprint.route('/group/<int:groupId>', methods=['GET'])
 def getGroup(groupId: int) -> (Response, int):
     gs: GroupService = GroupService()
-    getUsers = boolFromQuery(request.args.get("members"))
+    getUsers = boolFromQuery(request.args.get("members"), default=False)
     res: dict = gs.getGroup(groupId, getUsers)
     return jsonify(res), res.status
 

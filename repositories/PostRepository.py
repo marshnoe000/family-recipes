@@ -10,6 +10,7 @@ class PostRepository(BaseRepository):
     SELECT_ALL_BY_USER = "select * from post where post.author = ?"
     SELECT_ALL_BY_GROUP = "select * from post where post.group_id = ?"
     DELETE_BY_ID = "delete from post where post.id = ?"
+    JOIN_WITH_RECIPE = " join recipe on post.recipe_id = recipe.id"
 
     def __init__(self):
         super().__init__()
@@ -28,25 +29,31 @@ class PostRepository(BaseRepository):
         return rs.last_insert_rowid
 
     def getPostById(self, id: int, embedRecipe: bool) -> PostDto:
-        rs: ResultSet = self.execute(
-            PostRepository.SELECT_ALL_BY_ID,
-            [id])
+        query: str = PostRepository.SELECT_ALL_BY_ID
+        if embedRecipe:
+            query += PostRepository.JOIN_WITH_RECIPE
+
+        rs: ResultSet = self.execute(query, [id])
 
         post = PostDto.fromResultSet(rs)
         return post
 
     def getPostsByUser(self, username: str, embedRecipe: bool) -> list[PostDto]:
-        rs: ResultSet = self.execute(
-            PostRepository.SELECT_ALL_BY_USER,
-            [username])
+        query: str = PostRepository.SELECT_ALL_BY_USER
+        if embedRecipe:
+            query += PostRepository.JOIN_WITH_RECIPE
+
+        rs: ResultSet = self.execute(query, [username])
 
         posts = PostDto.fromResultSet(rs, forceArray=True)
         return posts
 
     def getPostsByGroup(self, groupId: int, embedRecipe) -> list[PostDto]:
-        rs: ResultSet = self.execute(
-            PostRepository.SELECT_ALL_BY_GROUP,
-            [groupId])
+        query: str = PostRepository.SELECT_ALL_BY_GROUP
+        if embedRecipe:
+            query += PostRepository.JOIN_WITH_RECIPE
+
+        rs: ResultSet = self.execute(query, [groupId])
 
         posts = PostDto.fromResultSet(rs, forceArray=True)
         return posts

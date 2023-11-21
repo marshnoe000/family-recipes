@@ -10,7 +10,7 @@ post_blueprint = Blueprint('post', __name__)
 
 @post_blueprint.route('/post/<int:id>', methods=['GET'])
 def getSinglePost(id: int) -> (Response, int):
-    embedRecipe = boolFromQuery(request.args.get('embed'), default=True)
+    embedRecipe = boolFromQuery(request.args.get('embedRecipe'), default=True)
     ps: PostService = PostService()
     res: dict = ps.getPost(id, embedRecipe)
     return jsonify(res), res.status
@@ -25,7 +25,7 @@ def deleteSinglePost(id: int) -> (Response, int):
 
 @post_blueprint.route('/post/u/<string:username>', methods=['GET'])
 def getUserPosts(username: str) -> (Response, int):
-    embedRecipe = boolFromQuery(request.args.get('embed'), default=True)
+    embedRecipe = boolFromQuery(request.args.get('embedRecipe'), default=True)
     ps: PostService = PostService()
     res: dict = ps.getUserPosts(username, embedRecipe)
     return jsonify(res), res.status
@@ -33,7 +33,7 @@ def getUserPosts(username: str) -> (Response, int):
 
 @post_blueprint.route('/post/g/<int:groupId>', methods=['GET'])
 def getGroupPosts(groupId: int) -> (Response, int):
-    embedRecipe = boolFromQuery(request.args.get('embed'), default=True)
+    embedRecipe = boolFromQuery(request.args.get('embedRecipe'), default=True)
     ps: PostService = PostService()
     res: dict = ps.getGroupPosts(groupId, embedRecipe)
     return jsonify(res), res.status

@@ -23,7 +23,7 @@ def deleteSinglePost(id: int) -> (Response, int):
     return jsonify(res), res.status
 
 
-@post_blueprint.route('/post/u/<string:username>', methods=['GET'])
+@post_blueprint.route('/post/user/<string:username>', methods=['GET'])
 def getUserPosts(username: str) -> (Response, int):
     embedRecipe = boolFromQuery(request.args.get('embedRecipe'), default=True)
     ps: PostService = PostService()
@@ -31,7 +31,7 @@ def getUserPosts(username: str) -> (Response, int):
     return jsonify(res), res.status
 
 
-@post_blueprint.route('/post/g/<int:groupId>', methods=['GET'])
+@post_blueprint.route('/post/group/<int:groupId>', methods=['GET'])
 def getGroupPosts(groupId: int) -> (Response, int):
     embedRecipe = boolFromQuery(request.args.get('embedRecipe'), default=True)
     ps: PostService = PostService()

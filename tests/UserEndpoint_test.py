@@ -49,3 +49,15 @@ def testDeleteUser(client):
         response = client.delete(f"/user/{username}")
 
         assert response.status_code == 404
+
+
+def testLogin(client):
+    response = client.post("/user/register",
+                           json=dict(username="username", password="password", email="email", name="name"))
+    assert response.status_code == 201
+
+    loginResponse = client.post("/user/login", json=dict(username="username", password="password"))
+    assert loginResponse.status_code == 200
+
+    loginResponse = client.post("/user/login", json=dict(username="username", password="wrongPassword"))
+    assert loginResponse.status_code == 401

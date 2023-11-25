@@ -46,10 +46,16 @@ class UserService:
     def register(self, user: UserDto) -> CreateResponse:
         # hash and salt the password here if desired
         validateNewUser(user)
+        user.passwordSalt = ""
         app.logger.info(f"creating {user}...")
-        salt = "salt"
-        user.passwordSalt = salt
         self.userRepository.registerUser(user)
         res = CreateResponse(201, user["username"])
+
+        return res
+
+    def login(self, userDto) -> DataResponse:
+        user = self.userRepository.getUserByUsername(userDto.username)
+        status = 200 if userDto.password == user.password else 401
+        res = DataResponse(status, user.username)
 
         return res

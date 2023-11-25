@@ -34,3 +34,6 @@ class UserRepository(BaseRepository):
             UserRepository.DELETE_BY_USERNAME, [username])
 
         return rs.rows_affected
+
+    def login(self, userDto):
+        pass

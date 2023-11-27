@@ -57,7 +57,7 @@ class RecipeDto(dict):
         ) for row in resultSet.rows]
 
     def __str__(self):
-        return f"user{super().__str__()}"
+        return f"recipe{super().__str__()}"
 
     def __getattr__(self, attr: str):
         return self[attr]

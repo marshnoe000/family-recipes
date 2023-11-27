@@ -1,4 +1,4 @@
-from flask import current_app as app, request
+from flask import current_app as app
 
 from repositories import PostRepository
 from dtos import PostDto

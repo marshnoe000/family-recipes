@@ -43,8 +43,14 @@ CREATE TABLE post (
         FOREIGN KEY (author) REFERENCES user(username)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    FOREIGN KEY (recipe_id) REFERENCES recipe(id),
-    FOREIGN KEY (group_id) REFERENCES group_table(id)
+    CONSTRAINT fk_recipe_id
+        FOREIGN KEY (recipe_id) REFERENCES recipe(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT fk_group_id
+        FOREIGN KEY (group_id) REFERENCES group_table(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
 );
 CREATE TABLE recipe (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -1,6 +1,6 @@
 from flask import current_app as app
 
-from repositories import PostRepository
+from repositories import PostRepository, GroupRepository
 from dtos import PostDto
 from dtos.responses import DataResponse, DeleteResponse, CreateResponse
 from dtos.errors import BadRequestError
@@ -24,6 +24,7 @@ def validateNewPost(post: PostDto):
 class PostService:
     def __init__(self):
         self.postRepo = PostRepository()
+        self.groupRepo = GroupRepository()
 
     def makePost(self, post: PostDto) -> CreateResponse:
         validateNewPost(post)
@@ -55,4 +56,10 @@ class PostService:
         rowsAffected = self.postRepo.deletePostById(id)
         res = DeleteResponse(200, rowsAffected)
 
+        return res
+
+    def getUserFeed(self, username: str) -> DataResponse:
+        groups = self.groupRepo.getUsersGroups(username)
+        feed = self.postRepo.getPostsByGroups(groups, sortDate=True)
+        res = DataResponse(200, feed)
         return res

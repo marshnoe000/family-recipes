@@ -42,3 +42,10 @@ def createPost() -> (Response, int):
     ps: PostService = PostService()
     res: dict = ps.makePost(post)
     return jsonify(res), res.status
+
+
+@post_blueprint.route('/feed/<string:username>', methods=['GET'])
+def getUserFeed(username: str) -> (Response, int):
+    ps: PostService = PostService()
+    res: dict = ps.getUserFeed(username)
+    return jsonify(res), res.status

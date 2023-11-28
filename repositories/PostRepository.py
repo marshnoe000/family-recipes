@@ -9,6 +9,7 @@ class PostRepository(BaseRepository):
     SELECT_ALL_BY_ID = "select * from post where post.id = ?"
     SELECT_ALL_BY_USER = "select * from post where post.author = ?"
     SELECT_ALL_BY_GROUP = "select * from post where post.group_id = ?"
+    SELECT_ALL_BY_GROUPS = "select * from post where post.group_id in ({})"
     DELETE_BY_ID = "delete from post where post.id = ?"
 
     def __init__(self):
@@ -49,6 +50,21 @@ class PostRepository(BaseRepository):
             [groupId])
 
         posts = PostDto.fromResultSet(rs, forceArray=True)
+        return posts
+
+    # add sort to all post funcs?
+    def getPostsByGroups(self, groups: list[int], sortDate: bool = False) -> list[PostDto]:
+        # dont like this
+        groupstr = groups.__str__()
+        rs: ResultSet = self.execute(
+            PostRepository.SELECT_ALL_BY_GROUPS.format(
+                groupstr[1:len(groupstr)-1]),
+            None)
+
+        posts = PostDto.fromResultSet(rs, forceArray=True)
+        if sortDate:
+            posts.sort(key=lambda e: e.dateCreated, reverse=True)
+
         return posts
 
     def deletePostById(self, id: int) -> int:

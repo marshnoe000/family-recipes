@@ -7,6 +7,8 @@ class ErrorResponse(dict):
                 status = 500
             case "BadRequestError":
                 status = 400
+            case "InvalidLoginError":
+                status = 401
             case "NotFoundError":
                 status = 404
             case _:

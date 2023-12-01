@@ -41,13 +41,13 @@ class PostService:
         return res
 
     def getUserPosts(self, username: str) -> DataResponse:
-        posts = self.postRepo.getPostsByUser(username)
+        posts = self.postRepo.getPostsByUser(username, sortDate=True)
         res = DataResponse(200, posts)
 
         return res
 
     def getGroupPosts(self, groupId: int) -> DataResponse:
-        posts = self.postRepo.getPostsByGroup(groupId)
+        posts = self.postRepo.getPostsByGroup(groupId, sortDate=True)
         res = DataResponse(200, posts)
 
         return res
@@ -60,6 +60,7 @@ class PostService:
 
     def getUserFeed(self, username: str) -> DataResponse:
         groups = self.groupRepo.getUsersGroups(username)
-        feed = self.postRepo.getPostsByGroups(groups, sortDate=True)
+        feed = self.postRepo.getPostsByGroupList(groups, sortDate=True)
         res = DataResponse(200, feed)
+
         return res

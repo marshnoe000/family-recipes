@@ -229,6 +229,29 @@ paths:
         '404':
           description: Not found
 
+  /post/feed/{username}:
+    parameters:
+      - name: username
+        in: path
+        description: Operations on a user's post feed
+        required: true
+        schema:
+          type: string
+
+    get:
+      tags:
+        - post
+      summary: Fetch a user's feed
+      description: Aggregate and retrieve a user's feed
+      operationId: getUserFeed
+      responses:
+        '200':
+          description: Successfully retrieved feed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/multiPostRes'
+
   /recipe:
     get:
       tags:

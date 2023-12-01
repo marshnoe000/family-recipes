@@ -9,8 +9,9 @@ class PostRepository(BaseRepository):
     SELECT_ALL_BY_ID = "select * from post where post.id = ?"
     SELECT_ALL_BY_USER = "select * from post where post.author = ?"
     SELECT_ALL_BY_GROUP = "select * from post where post.group_id = ?"
-    SELECT_ALL_BY_GROUPS = "select * from post where post.group_id in ({})"
+    SELECT_ALL_BY_GROUP_LIST = "select * from post where post.group_id in ({})"
     DELETE_BY_ID = "delete from post where post.id = ?"
+    SORT_MOST_RECENT = " order by created_at desc"
 
     def __init__(self):
         super().__init__()
@@ -36,34 +37,35 @@ class PostRepository(BaseRepository):
         post = PostDto.fromResultSet(rs)
         return post
 
-    def getPostsByUser(self, username: str) -> list[PostDto]:
-        rs: ResultSet = self.execute(
-            PostRepository.SELECT_ALL_BY_USER,
-            [username])
+    def getPostsByUser(self, username: str, sortDate: bool = False) -> list[PostDto]:
+        query = PostRepository.SELECT_ALL_BY_GROUP
+        if sortDate:
+            query += PostRepository.SORT_MOST_RECENT
+        rs: ResultSet = self.execute(query, [username])
 
         posts = PostDto.fromResultSet(rs, forceArray=True)
         return posts
 
-    def getPostsByGroup(self, groupId: int) -> list[PostDto]:
-        rs: ResultSet = self.execute(
-            PostRepository.SELECT_ALL_BY_GROUP,
-            [groupId])
+    def getPostsByGroup(self, groupId: int, sortDate: bool = False) -> list[PostDto]:
+        query = PostRepository.SELECT_ALL_BY_GROUP
+        if sortDate:
+            query += PostRepository.SORT_MOST_RECENT
+        rs: ResultSet = self.execute(query, [groupId])
 
         posts = PostDto.fromResultSet(rs, forceArray=True)
         return posts
 
-    # add sort to all post funcs?
-    def getPostsByGroups(self, groups: list[int], sortDate: bool = False) -> list[PostDto]:
-        # dont like this
-        groupstr = groups.__str__()
+    def getPostsByGroupList(self, groups: list[int], sortDate: bool = False) -> list[PostDto]:
+        query = PostRepository.SELECT_ALL_BY_GROUP_LIST
+        if sortDate:
+            query += PostRepository.SORT_MOST_RECENT
+
+        groupstr = groups.__str__().strip("[]")
         rs: ResultSet = self.execute(
-            PostRepository.SELECT_ALL_BY_GROUPS.format(
-                groupstr[1:len(groupstr)-1]),
+            query.format(groupstr),
             None)
 
         posts = PostDto.fromResultSet(rs, forceArray=True)
-        if sortDate:
-            posts.sort(key=lambda e: e.dateCreated, reverse=True)
 
         return posts
 

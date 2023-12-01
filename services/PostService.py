@@ -35,7 +35,8 @@ class PostService:
 
     def getPost(self, id: int, embedRecipe: bool) -> DataResponse:
         post = self.postRepo.getPostById(id, embedRecipe)
-        res = DataResponse(200, post)
+        status = 200 if post is not None else 404
+        res = DataResponse(status, post)
 
         return res
 

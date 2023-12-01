@@ -140,7 +140,7 @@ paths:
         '400':
           description: Bad request
 
-  /post/id/{postId}:
+  /post/{postId}:
     parameters:
       - name: postId
         in: path
@@ -149,6 +149,12 @@ paths:
         schema:
           type: integer
           format: int64
+      - name: embedRecipe
+        in: query
+        description: Whether or not to include recipe in response, default true
+        required: false
+        schema:
+            type: boolean
     get:
       tags:
         - post
@@ -180,7 +186,7 @@ paths:
         '404':
           description: Not found
 
-  /post/u/{username}:
+  /post/user/{username}:
     parameters:
       - name: username
         in: path
@@ -188,6 +194,12 @@ paths:
         required: true
         schema:
           type: string
+      - name: embedRecipe
+        in: query
+        description: Whether or not to include recipes in response, default true
+        required: false
+        schema:
+            type: boolean
     get:
       tags:
         - post
@@ -204,7 +216,7 @@ paths:
         '404':
           description: Not found
 
-  /post/g/{groupId}:
+  /post/group/{groupId}:
     parameters:
       - name: groupId
         in: path
@@ -213,6 +225,12 @@ paths:
         schema:
           type: integer
           format: int64
+      - name: embedRecipe
+        in: query
+        description: Whether or not to include recipes in response, default true
+        required: false
+        schema:
+            type: boolean
     get:
       tags:
         - post
@@ -302,6 +320,13 @@ paths:
 
 
   /user/{username}:
+    parameters:
+      - name: username
+        in: path
+        description: username of target user
+        required: true
+        schema:
+          type: string
     get:
       tags:
         - user
@@ -566,6 +591,8 @@ components:
               items:
                 type: string
                 description: Tags to associate with the post
+            recipe:
+              $ref: "#/components/schemas/recipe"
 
     multiPostRes:
       type: object
@@ -602,6 +629,8 @@ components:
                 items:
                   type: string
                   description: Tags to associate with the post
+              recipe:
+                $ref: "#/components/schemas/recipe"
 
     singleGroupRes:
       type: object

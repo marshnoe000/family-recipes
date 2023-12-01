@@ -27,26 +27,26 @@ class PostService:
 
     def makePost(self, post: PostDto) -> CreateResponse:
         validateNewPost(post)
-        app.logger.info(f"creating {post}...")
+        app.logger.debug(f"creating {post}...")
         insertedId = self.postRepo.insertPost(post)
         res = CreateResponse(201, insertedId)
 
         return res
 
-    def getPost(self, id: int) -> DataResponse:
-        post = self.postRepo.getPostById(id)
+    def getPost(self, id: int, embedRecipe: bool) -> DataResponse:
+        post = self.postRepo.getPostById(id, embedRecipe)
         res = DataResponse(200, post)
 
         return res
 
-    def getUserPosts(self, username: str) -> DataResponse:
-        posts = self.postRepo.getPostsByUser(username)
+    def getUserPosts(self, username: str, embedRecipe: bool) -> DataResponse:
+        posts = self.postRepo.getPostsByUser(username, embedRecipe)
         res = DataResponse(200, posts)
 
         return res
 
-    def getGroupPosts(self, groupId: int) -> DataResponse:
-        posts = self.postRepo.getPostsByGroup(groupId)
+    def getGroupPosts(self, groupId: int, embedRecipe: bool) -> DataResponse:
+        posts = self.postRepo.getPostsByGroup(groupId, embedRecipe)
         res = DataResponse(200, posts)
 
         return res

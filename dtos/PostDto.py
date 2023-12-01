@@ -41,11 +41,11 @@ class PostDto(dict):
                 row[0], row[1],
                 row[2], row[3],
                 row[4], row[5],
-                row[6], row[7].split(',')
+                row[6], row[7].split(',') if row[7] else list()
             )
 
         posts = [PostDto(row[0], row[1], row[2], row[3],
-                         row[4], row[5], row[6], row[7].split(','))
+                         row[4], row[5], row[6], row[7].split(',') if row[7] else list())
                  for row in rs]
         return posts
 

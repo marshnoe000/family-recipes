@@ -1,19 +1,20 @@
 from libsql_client import ResultSet
-import json
 
 
-class RecipeDto:
+class RecipeDto(dict):
     def __init__(self, recipeId, title, description, ingredients, instructions, difficultyLevel, image, foodType,
                  recipeSource):
-        self.recipeId = recipeId
-        self.title = title
-        self.description = description
-        self.ingredients = ingredients
-        self.instructions = instructions
-        self.difficultyLevel = difficultyLevel
-        self.image = image
-        self.foodType = foodType
-        self.recipeSource = recipeSource
+        super().__init__(
+            recipeId=recipeId,
+            title=title,
+            description=description,
+            ingredients=ingredients,
+            instructions=instructions,
+            difficultyLevel=difficultyLevel,
+            image=image,
+            foodType=foodType,
+            recipeSource=recipeSource,
+        )
 
     def fromJson(json: dict):
         return RecipeDto(
@@ -56,4 +57,10 @@ class RecipeDto:
         ) for row in resultSet.rows]
 
     def __str__(self):
-        return f"user{super().__str__()}"
+        return f"recipe{super().__str__()}"
+
+    def __getattr__(self, attr: str):
+        return self[attr]
+
+    def __setattr__(self, attr: str, value: any):
+        self[attr] = value

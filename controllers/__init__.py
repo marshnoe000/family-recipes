@@ -1,4 +1,4 @@
-def boolFromQuery(q: str) -> bool:
+def boolFromQuery(q: str, default: bool) -> bool:
     """
     Interpets query parameter as a bool.
 
@@ -9,7 +9,7 @@ def boolFromQuery(q: str) -> bool:
         bool: `True` for "true" and "1", `False` otherwise. Case insensitive.
     """
     if q is None:
-        return False
+        return default
 
     if q.isdigit():
         return q == "1"

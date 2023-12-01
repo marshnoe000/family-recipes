@@ -59,5 +59,13 @@ def testLogin(client):
     loginResponse = client.post("/user/login", json=dict(username="username", password="password"))
     assert loginResponse.status_code == 200
 
+    res_body = loginResponse.get_json()
+    assert 'passwordHash' not in res_body["data"]
+    assert 'passwordSalt' not in res_body["data"]
+
     loginResponse = client.post("/user/login", json=dict(username="username", password="wrongPassword"))
     assert loginResponse.status_code == 401
+
+    res_body = loginResponse.get_json()
+    assert 'error' in res_body
+    assert res_body['error'] == "InvalidLoginError"

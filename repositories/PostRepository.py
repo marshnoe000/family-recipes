@@ -9,7 +9,9 @@ class PostRepository(BaseRepository):
     SELECT_ALL_BY_ID = "select * from post where post.id = ?"
     SELECT_ALL_BY_USER = "select * from post where post.author = ?"
     SELECT_ALL_BY_GROUP = "select * from post where post.group_id = ?"
+    SELECT_ALL_BY_GROUP_LIST = "select * from post where post.group_id in ({})"
     DELETE_BY_ID = "delete from post where post.id = ?"
+    SORT_MOST_RECENT = " order by created_at desc"
     JOIN_RECIPE = " join recipe on post.recipe_id = recipe.id "
 
     def __init__(self):
@@ -49,10 +51,12 @@ class PostRepository(BaseRepository):
 
         return post
 
-    def getPostsByUser(self, username: str, embedRecipe: bool) -> list[PostDto]:
+    def getPostsByUser(self, username: str, embedRecipe: bool, sortDate: bool = False) -> list[PostDto]:
         query: str = PostRepository.SELECT_ALL_BY_USER
         if embedRecipe:
             query = self.withJoin(query, PostRepository.JOIN_RECIPE)
+        if sortDate:
+            query += PostRepository.SORT_MOST_RECENT
 
         rs: ResultSet = self.execute(query, [username])
         posts = PostDto.fromResultSet(rs, forceArray=True)
@@ -64,12 +68,34 @@ class PostRepository(BaseRepository):
 
         return posts
 
-    def getPostsByGroup(self, groupId: int, embedRecipe) -> list[PostDto]:
-        query: str = PostRepository.SELECT_ALL_BY_GROUP
+    def getPostsByGroup(self, groupId: int, embedRecipe: bool, sortDate: bool = False) -> list[PostDto]:
+        query = PostRepository.SELECT_ALL_BY_GROUP
         if embedRecipe:
             query = self.withJoin(query, PostRepository.JOIN_RECIPE)
+        if sortDate:
+            query += PostRepository.SORT_MOST_RECENT
 
         rs: ResultSet = self.execute(query, [groupId])
+        posts = PostDto.fromResultSet(rs, forceArray=True)
+
+        if embedRecipe and posts is not None:
+            for row, post in zip(rs.rows, posts):
+                post.recipe = RecipeDto(*row[8:])
+                del post["recipeId"]
+
+        return posts
+
+    def getPostsByGroupList(self, groups: list[int], embedRecipe: bool, sortDate: bool = False) -> list[PostDto]:
+        query = PostRepository.SELECT_ALL_BY_GROUP_LIST
+        if embedRecipe:
+            query = self.withJoin(query, PostRepository.JOIN_RECIPE)
+        if sortDate:
+            query += PostRepository.SORT_MOST_RECENT
+
+        groupstr = groups.__str__().strip("[]")
+        rs: ResultSet = self.execute(
+            query.format(groupstr),
+            None)
         posts = PostDto.fromResultSet(rs, forceArray=True)
 
         if embedRecipe and posts is not None:

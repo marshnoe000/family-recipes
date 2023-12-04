@@ -29,7 +29,7 @@ class RecipeRepository(BaseRepository):
     def insertRecipe(self, recipeDto: RecipeDto) -> ResultSet:
         resultSet: ResultSet = self.client.execute(RecipeRepository.INSERT_RECIPE_STATEMENT,
                                                    [recipeDto.title, recipeDto.description,
-                                                    ','.join(recipeDto.ingredients),
+                                                    ','.join(recipeDto.ingredients) if recipeDto.ingredients is not None else '',
                                                     recipeDto.instructions,
                                                     recipeDto.difficultyLevel, recipeDto.image, recipeDto.foodType,
                                                     recipeDto.recipeSource])

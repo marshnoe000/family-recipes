@@ -1,6 +1,6 @@
 from flask import current_app as app
 
-from repositories import PostRepository
+from repositories import PostRepository, GroupRepository
 from dtos import PostDto
 from dtos.responses import DataResponse, DeleteResponse, CreateResponse
 from dtos.errors import BadRequestError
@@ -24,6 +24,7 @@ def validateNewPost(post: PostDto):
 class PostService:
     def __init__(self):
         self.postRepo = PostRepository()
+        self.groupRepo = GroupRepository()
 
     def makePost(self, post: PostDto) -> CreateResponse:
         validateNewPost(post)
@@ -41,13 +42,13 @@ class PostService:
         return res
 
     def getUserPosts(self, username: str, embedRecipe: bool) -> DataResponse:
-        posts = self.postRepo.getPostsByUser(username, embedRecipe)
+        posts = self.postRepo.getPostsByUser(username, embedRecipe, sortDate=True)
         res = DataResponse(200, posts)
 
         return res
 
     def getGroupPosts(self, groupId: int, embedRecipe: bool) -> DataResponse:
-        posts = self.postRepo.getPostsByGroup(groupId, embedRecipe)
+        posts = self.postRepo.getPostsByGroup(groupId, embedRecipe, sortDate=True)
         res = DataResponse(200, posts)
 
         return res
@@ -55,5 +56,12 @@ class PostService:
     def deletePost(self, id: int) -> DeleteResponse:
         rowsAffected = self.postRepo.deletePostById(id)
         res = DeleteResponse(200, rowsAffected)
+
+        return res
+
+    def getUserFeed(self, username: str, embedRecipe: bool) -> DataResponse:
+        groups = self.groupRepo.getUsersGroups(username)
+        feed = self.postRepo.getPostsByGroupList(groups, embedRecipe, sortDate=True)
+        res = DataResponse(200, feed)
 
         return res

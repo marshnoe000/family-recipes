@@ -39,6 +39,13 @@ def checkPasswordHash(password: str, targetHash: str, salt: str) -> bool:
     return hmac.compare_digest(hash, targetHash)
 
 
+def sanitizeUserRes(user: UserDto) -> UserDto:
+    if user is not None:
+        del user["passwordHash"]
+        del user["passwordSalt"]
+    return user
+
+
 class UserService:
     def __init__(self):
         self.userRepository = UserRepository()
@@ -46,6 +53,8 @@ class UserService:
     def getUser(self, username: str) -> DataResponse:
         user = self.userRepository.getUserByUsername(username)
         status = 404 if user is None else 200
+
+        user = sanitizeUserRes(user)
         res = DataResponse(status, user)
 
         return res
@@ -77,9 +86,7 @@ class UserService:
         if not checkPasswordHash(req_password, user.passwordHash, user.passwordSalt):
             raise InvalidLoginError()
 
-        # these need to use dict access syntax for some reason
-        del user["passwordHash"]
-        del user["passwordSalt"]
+        user = sanitizeUserRes(user)
         res = DataResponse(200, user)
 
         return res

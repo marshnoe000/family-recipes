@@ -2,10 +2,10 @@ from libsql_client import ResultSet
 
 
 class UserDto(dict):
-    def __init__(self, username, password, email, name, passwordSalt=""):
+    def __init__(self, username, passwordHash, passwordSalt, email, name):
         super().__init__(
             username=username,
-            password=password,
+            passwordHash=passwordHash,
             passwordSalt=passwordSalt,
             email=email,
             name=name,
@@ -14,10 +14,10 @@ class UserDto(dict):
     def fromJson(json: dict):
         return UserDto(
             json.get('username'),
-            json.get('password'),
+            json.get('passwordHash'),
+            json.get('passwordSalt'),
             json.get('email'),
-            json.get('name'),
-            json.get('passwordSalt')
+            json.get('name')
         )
 
     def fromResultSet(rs: ResultSet, forceArray=False):
@@ -28,8 +28,8 @@ class UserDto(dict):
             row = rs[0]
             return UserDto(
                 row[0], row[1],
-                row[3], row[4],
-                row[2]
+                row[2], row[3],
+                row[4]
             )
 
         users = [UserDto(row[0], row[1], row[2], row[3],

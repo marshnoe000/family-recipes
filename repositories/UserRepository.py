@@ -11,14 +11,13 @@ class UserRepository(BaseRepository):
     SELECT_USER_BY_USERNAME = "SELECT * FROM user where user.username = ?"
     DELETE_BY_USERNAME = "DELETE FROM user WHERE user.username = ?"
 
-
     def __init__(self):
         super().__init__()
 
     def registerUser(self, user: UserDto):
         self.execute(
             UserRepository.INSERT_USER_STATEMENT,
-            [user.username, user.password,
+            [user.username, user.passwordHash,
              user.passwordSalt, user.email,
              user.name])
 

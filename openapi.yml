@@ -18,6 +18,8 @@ tags:
     description: Related to recipes
   - name: user
     description: Related to users of Family Recipes
+  - name: comment
+    description: Related to comments of Family Recipe
 
 paths:
 
@@ -140,7 +142,7 @@ paths:
         '400':
           description: Bad request
 
-  /post/id/{postId}:
+  /post/{postId}:
     parameters:
       - name: postId
         in: path
@@ -149,6 +151,12 @@ paths:
         schema:
           type: integer
           format: int64
+      - name: embedRecipe
+        in: query
+        description: Whether or not to include recipe in response, default true
+        required: false
+        schema:
+            type: boolean
     get:
       tags:
         - post
@@ -180,7 +188,7 @@ paths:
         '404':
           description: Not found
 
-  /post/u/{username}:
+  /post/user/{username}:
     parameters:
       - name: username
         in: path
@@ -188,6 +196,12 @@ paths:
         required: true
         schema:
           type: string
+      - name: embedRecipe
+        in: query
+        description: Whether or not to include recipes in response, default true
+        required: false
+        schema:
+            type: boolean
     get:
       tags:
         - post
@@ -204,7 +218,7 @@ paths:
         '404':
           description: Not found
 
-  /post/g/{groupId}:
+  /post/group/{groupId}:
     parameters:
       - name: groupId
         in: path
@@ -213,6 +227,12 @@ paths:
         schema:
           type: integer
           format: int64
+      - name: embedRecipe
+        in: query
+        description: Whether or not to include recipes in response, default true
+        required: false
+        schema:
+            type: boolean
     get:
       tags:
         - post
@@ -322,9 +342,91 @@ paths:
               schema:
                 $ref: "#/components/schemas/deleteRecipeRes"
 
+  /comment:
+    post:
+      tags:
+        - comment
+      summary: comment on a post
+      description: comment on post
+      operationId: postComment
+      requestBody:
+        $ref: "#/components/requestBodies/postComment"
+      responses:
+        '200':
+          description: successfully commented on post
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/postCommentRes"
+
+  /comment/p/{postId}:
+    parameters:
+      - name: postId
+        in: path
+        description: id of the post whose comments we want to get
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      tags:
+        - comment
+      summary: get all comments of a post
+      description: get all comments of a post
+      operationId: getPostComments
+      responses:
+        '200':
+          description: successfully retrieved comments for post
+          content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/getPostCommentsRes"
+
+  /comment/{commentId}:
+    parameters:
+      - name: commentId
+        in: path
+        description: id of the comment that we want to get or delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      tags:
+        - comment
+      summary: get a single comment
+      description: get a single comment by Id
+      operationId: getCommentById
+      responses:
+        '200':
+          description: successfully retrieved comment by id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getCommentByIdRes"
+    delete:
+      tags:
+        - comment
+      summary: delete a comment by Id
+      description: delete a comment by Id
+      operationId: deleteCommentById
+      responses:
+        '200':
+          description: successfully deleted comment by id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/deleteCommentRes"
 
 
   /user/{username}:
+    parameters:
+      - name: username
+        in: path
+        description: username of target user
+        required: true
+        schema:
+          type: string
     get:
       tags:
         - user
@@ -430,6 +532,33 @@ paths:
 components:
 
   schemas:
+
+    comment:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1234
+        author:
+          type: string
+          description: username of the poster
+          example: username1
+        content:
+          type: string
+          example: this is a comment
+        createdAt:
+          type: string
+          format: date-time
+        postId:
+          type: integer
+          format: int64
+          description: id of post on which comment is made
+          example: 1234
+        parentId:
+          type: integer
+          format: int64
+          example: 1234
 
     group:
       type: object
@@ -589,6 +718,8 @@ components:
               items:
                 type: string
                 description: Tags to associate with the post
+            recipe:
+              $ref: "#/components/schemas/recipe"
 
     multiPostRes:
       type: object
@@ -625,6 +756,8 @@ components:
                 items:
                   type: string
                   description: Tags to associate with the post
+              recipe:
+                $ref: "#/components/schemas/recipe"
 
     singleGroupRes:
       type: object
@@ -743,7 +876,71 @@ components:
           type: integer
           example: 1234
 
+    postCommentRes:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 200
+        id:
+          type: integer
+          example: 1234
+
+    deleteCommentRes:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 200
+        rowsAffected:
+          type: integer
+          example: 1
+
+    getCommentByIdRes:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 200
+        data:
+          $ref: "#/components/schemas/comment"
+
+
+    getPostCommentsRes:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 200
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/comment"
+
   requestBodies:
+    postComment:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              author:
+                type: string
+                description: username of the poster
+                example: username1
+              content:
+                type: string
+                example: this is a comment
+              postId:
+                type: integer
+                format: int64
+                description: id of post on which comment is made
+                example: 1234
+              parentId:
+                type: integer
+                format: int64
+                example: 1234
+
 
     createRecipe:
       content:

@@ -8,4 +8,4 @@ error_blueprint = Blueprint('error', __name__)
 def handle_app_error(e):
     app.logger.error("%s: %s", type(e).__name__, e)
     res: dict = ErrorResponse(e)
-    return jsonify(res), res["status"]
+    return jsonify(res), res.status

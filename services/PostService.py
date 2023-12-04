@@ -28,26 +28,27 @@ class PostService:
 
     def makePost(self, post: PostDto) -> CreateResponse:
         validateNewPost(post)
-        app.logger.info(f"creating {post}...")
+        app.logger.debug(f"creating {post}...")
         insertedId = self.postRepo.insertPost(post)
         res = CreateResponse(201, insertedId)
 
         return res
 
-    def getPost(self, id: int) -> DataResponse:
-        post = self.postRepo.getPostById(id)
-        res = DataResponse(200, post)
+    def getPost(self, id: int, embedRecipe: bool) -> DataResponse:
+        post = self.postRepo.getPostById(id, embedRecipe)
+        status = 200 if post is not None else 404
+        res = DataResponse(status, post)
 
         return res
 
-    def getUserPosts(self, username: str) -> DataResponse:
-        posts = self.postRepo.getPostsByUser(username, sortDate=True)
+    def getUserPosts(self, username: str, embedRecipe: bool) -> DataResponse:
+        posts = self.postRepo.getPostsByUser(username, embedRecipe, sortDate=True)
         res = DataResponse(200, posts)
 
         return res
 
-    def getGroupPosts(self, groupId: int) -> DataResponse:
-        posts = self.postRepo.getPostsByGroup(groupId, sortDate=True)
+    def getGroupPosts(self, groupId: int, embedRecipe: bool) -> DataResponse:
+        posts = self.postRepo.getPostsByGroup(groupId, embedRecipe, sortDate=True)
         res = DataResponse(200, posts)
 
         return res
@@ -58,9 +59,9 @@ class PostService:
 
         return res
 
-    def getUserFeed(self, username: str) -> DataResponse:
+    def getUserFeed(self, username: str, embedRecipe: bool) -> DataResponse:
         groups = self.groupRepo.getUsersGroups(username)
-        feed = self.postRepo.getPostsByGroupList(groups, sortDate=True)
+        feed = self.postRepo.getPostsByGroupList(groups, embedRecipe, sortDate=True)
         res = DataResponse(200, feed)
 
         return res

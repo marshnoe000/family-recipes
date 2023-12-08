@@ -1,4 +1,5 @@
 from libsql_client import ResultSet
+import base64
 
 
 class RecipeDto(dict):
@@ -40,7 +41,7 @@ class RecipeDto(dict):
                              ingredients=resultSet.rows[0][3].split(','),
                              instructions=resultSet.rows[0][4],
                              difficultyLevel=resultSet.rows[0][5],
-                             image=resultSet.rows[0][6],
+                             image=RecipeDto.encodeImage(resultSet.rows[0][6]),
                              foodType=resultSet.rows[0][7],
                              recipeSource=resultSet.rows[0][8])
 
@@ -55,6 +56,12 @@ class RecipeDto(dict):
             foodType=row[7],
             recipeSource=row[8]
         ) for row in resultSet.rows]
+
+    def encodeImage(image):
+        if isinstance(image, bytes):
+            return base64.b64encode(image).decode('utf-8')
+        else:
+            return image
 
     def __str__(self):
         return f"recipe{super().__str__()}"

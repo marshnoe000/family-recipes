@@ -297,7 +297,7 @@ paths:
       requestBody:
         $ref: "#/components/requestBodies/createRecipe"
       responses:
-        '200':
+        '201':
           description: Successfully posted recipe
           content:
             application/json:
@@ -327,6 +327,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/singleRecipeRes"
+        '404':
+          description: Not found
 
     delete:
       tags:
